@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>訂單進度查詢</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; background: #f0f2f5; display: flex; justify-content: center; padding: 20px; }
+        .card { background: white; width: 100%; max-width: 400px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h2 { text-align: center; color: #1a1a1a; margin-bottom: 20px; }
+        input { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 12px; box-sizing: border-box; font-size: 16px; margin-bottom: 15px; text-align: center; }
+        button { width: 100%; background: #06C755; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        #result { display: none; margin-top: 25px; border-top: 1px solid #eee; padding-top: 20px; }
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 12px; font-size: 15px; }
+        .label { color: #666; }
+        .value { color: #000; font-weight: 600; text-align: right; }
+        .date { color: #e74c3c; font-weight: bold; }
+        .memo-box { background: #fff9e6; padding: 12px; border-radius: 10px; border-left: 4px solid #f39c12; margin-top: 15px; font-size: 14px; }
+        .line-btn { display: block; text-align: center; background: #00B900; color: white; text-decoration: none; padding: 12px; border-radius: 10px; margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>訂單狀態查詢</h2>
+    <input type="text" id="phone" placeholder="請輸入手機號碼">
+    <button onclick="query()">立即查詢</button>
+
+    <div id="result">
+        <div class="info-row"><span class="label">客戶姓名</span><span id="resName" class="value"></span></div>
+        <div class="info-row"><span class="label">對帳狀態</span><span id="resPay" class="value" style="color:#27ae60"></span></div>
+        <div class="info-row"><span class="label">出貨狀態</span><span id="resStatus" class="value"></span></div>
+        <hr>
+        <div class="info-row"><span class="label">🛒 代購名稱</span><span id="resBrand" class="value"></span></div>
+        <div class="info-row"><span class="label">📝 訂購項目</span><span id="resItems" class="value"></span></div>
+        <div class="info-row"><span class="label">📅 官方出貨日</span><span id="resDate" class="value date"></span></div>
+        
+        <div class="memo-box">
+            <strong>賣家備註：</strong><br>
+            <span id="resMemo"></span>
+        </div>
+
+        <a href="https://line.me/ti/p/@948ppkdr" class="line-btn" target="_blank">💬 聯繫官方 LINE</a>
+    </div>
+</div>
+
+<script>
+    async function query() {
+        // 這裡貼上你剛剛部署拿到的 URL
+        const apiUrl = "https://script.google.com/macros/s/AKfycbxLJhpNNlcbhcOBbGzgJS7Js0KEPdyAEdpODHoVAYe8vchWMdl3yp8QzU66CVzEFxo7ag/exec"; 
+        
+        const phone = document.getElementById('phone').value;
+        if(!phone) return alert("請輸入手機號碼");
+
+        const btn = document.querySelector('button');
+        btn.innerText = "查詢中...";
+        btn.disabled = true;
+
+        try {
+            const response = await fetch(`${apiUrl}?id=${phone}`);
+            const data = await response.json();
+
+            if (data.status === "success") {
+                document.getElementById('result').style.display = 'block';
+                document.getElementById('resName').innerText = data.name;
+                document.getElementById('resPay').innerText = data.payment;
+                document.getElementById('resStatus').innerText = data.shipStatus;
+                document.getElementById('resBrand').innerText = data.brand;
+                document.getElementById('resItems').innerText = data.items;
+                document.getElementById('resDate').innerText = data.shipDate;
+                document.getElementById('resMemo').innerText = data.memo || "目前無備註";
+            } else {
+                alert("找不到訂單，請確認號碼是否正確");
+            }
+        } catch (e) {
+            alert("系統連線失敗，請檢查 API 網址或權限設定");
+        } finally {
+            btn.innerText = "立即查詢";
+            btn.disabled = false;
+        }
+    }
+</script>
+
+</body>
+</html>
