@@ -12,11 +12,13 @@
         button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.3s; }
         button:hover { background-color: #0056b3; }
         #result { margin-top: 25px; }
-        .order-card { border: 1px solid #eee; padding: 15px; border-radius: 12px; margin-bottom: 15px; background: #fafafa; }
+        .order-card { border: 1px solid #eee; padding: 15px; border-radius: 12px; margin-bottom: 20px; background: #fafafa; position: relative; }
         .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px dashed #eee; padding-bottom: 4px; }
         .label { color: #777; }
-        .value { color: #333; font-weight: 500; }
+        .value { color: #333; font-weight: 500; text-align: right; }
         .memo-box { background: #fff3cd; padding: 10px; border-radius: 6px; font-size: 13px; margin-top: 10px; border-left: 4px solid #ffc107; }
+        .status-badge { background:#007bff; color:white; padding:2px 8px; border-radius:4px; font-size:12px; }
+        .progress-box { background: #eef7ff; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #d0e7ff; }
     </style>
 </head>
 <body>
@@ -35,9 +37,9 @@
         
         if (!phone) { alert("請輸入手機號碼"); return; }
         
-        resultDiv.innerHTML = "查詢中...";
+        resultDiv.innerHTML = "<p style='text-align:center;'>查詢中...</p>";
 
-        // ⚠️ 請把下面這串換成你「重新部署」後得到的那串最新網址
+        // ⚠️ 請務必在此貼上你最新的 GAS 網址
         const apiUrl = "https://script.google.com/macros/s/AKfycbxLJhpNNlcbhcOBbGzgJS7Js0KEPdyAEdpODHoVAYe8vchWMdl3yp8QzU66CVzEFxo7ag/exec"; 
 
         try {
@@ -45,40 +47,25 @@
             const data = await response.json();
 
             if (data.status === "success") {
-                resultDiv.innerHTML = ""; // 清空文字
+                resultDiv.innerHTML = ""; 
                 data.orders.forEach((order, index) => {
                     const orderHtml = `
-                       <div class="order-card">
-    <div style="font-weight:bold; color:#007bff; margin-bottom:12px; font-size:18px;">📋 訂單 #${index + 1}</div>
-    
-    <div style="background: #eef7ff; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
-        <div class="info-row" style="border:none;">
-            <span class="label">💰 對帳狀態</span>
-            <span class="value" style="color:#27ae60;">● ${order.payment}</span>
-        </div>
-        <div class="info-row" style="border:none; margin-top:5px;">
-            <span class="label">🚀 出貨狀態</span>
-            <span class="value" style="background:#007bff; color:white; padding:2px 8px; border-radius:4px; font-size:13px;">
-                ${order.shipStatus}
-            </span>
-        </div>
-    </div>
+                        <div class="order-card">
+                            <div style="font-weight:bold; color:#007bff; margin-bottom:12px; font-size:16px;">📋 訂單 #${index + 1}</div>
+                            
+                            <div class="progress-box">
+                                <div class="info-row" style="border:none;"><span class="label">💰 對帳狀態</span><span class="value" style="color:#27ae60;">● ${order.payment}</span></div>
+                                <div class="info-row" style="border:none; margin-top:5px;"><span class="label">🚀 出貨狀態</span><span class="value"><span class="status-badge">${order.shipStatus}</span></span></div>
+                            </div>
 
-    <div class="info-row">
-        <span class="label">🚛 出貨方式</span>
-        <span class="value" style="color:#555;">${order.shipMethod}</span>
-    </div>
-    <div class="info-row">
-        <span class="label">📅 官方出貨日</span>
-        <span class="value">${order.shipDate || "未定"}</span>
-    </div>
-
-    <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
-
-    <div class="info-row"><span class="label">👤 客戶姓名</span><span class="value">${order.name}</span></div>
-    <div class="info-row"><span class="label">💵 匯款金額</span><span class="value">$${order.amount}</span></div>
-    <div class="info-row"><span class="label">🛒 代購名稱</span><span class="value">${order.brand}</span></div>
-    <div class="info-row"><span class="label">📝 訂購項目</span><span class="value">${order.items}</span></div>
-    
-    <div class="memo-box"><strong>賣家備註：</strong><br>${order.memo || "無"}</div>
-</div>
+                            <div class="info-row"><span class="label">🚛 出貨方式</span><span class="value">${order.shipMethod}</span></div>
+                            <div class="info-row"><span class="label">📅 官方出貨日</span><span class="value">${order.shipDate || "未定"}</span></div>
+                            
+                            <hr style="border:0; border-top:1px solid #eee; margin:12px 0;">
+                            
+                            <div class="info-row"><span class="label">👤 客戶姓名</span><span class="value">${order.name}</span></div>
+                            <div class="info-row"><span class="label">💵 匯款金額</span><span class="value">$${order.amount}</span></div>
+                            <div class="info-row"><span class="label">🛒 代購名稱</span><span class="value">${order.brand}</span></div>
+                            <div class="info-row"><span class="label">📝 訂購項目</span><span class="value">${order.items}</span></div>
+                            
+                            <div class="memo-box"><strong>賣家備註：</strong><br>${order.memo || "無"}</div>
