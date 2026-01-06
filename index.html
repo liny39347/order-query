@@ -48,30 +48,37 @@
                 resultDiv.innerHTML = ""; // 清空文字
                 data.orders.forEach((order, index) => {
                     const orderHtml = `
-                        <div class="order-card">
-                            <div style="font-weight:bold; color:#007bff; margin-bottom:10px;">📋 訂單 #${index + 1}</div>
-                            <div class="info-row"><span class="label">客戶姓名</span><span class="value">${order.name}</span></div>
-                            <div class="info-row"><span class="label">匯款金額</span><span class="value">$${order.amount}</span></div>
-                            <div class="info-row"><span class="label">對帳狀態</span><span class="value">${order.payment}</span></div>
-                            <div class="info-row"><span class="label">出貨狀態</span><span class="value">${order.shipStatus}</span></div>
-                            <div class="info-row"><span class="label">🚛 出貨方式</span><span class="value">${order.shipMethod}</span></div>
-                            <div class="info-row"><span class="label">🛒 代購名稱</span><span class="value">${order.brand}</span></div>
-                            <div class="info-row"><span class="label">📝 訂購項目</span><span class="value">${order.items}</span></div>
-                            <div class="info-row"><span class="label">📅 官方出貨日</span><span class="value">${order.shipDate || "未定"}</span></div>
-                            <div class="memo-box"><strong>備註：</strong><br>${order.memo || "無"}</div>
-                        </div>
-                    `;
-                    resultDiv.innerHTML += orderHtml;
-                });
-            } else {
-                resultDiv.innerHTML = "<p style='color:red; text-align:center;'>查無資料，請確認號碼是否正確。</p>";
-            }
-        } catch (error) {
-            resultDiv.innerHTML = "<p style='color:red; text-align:center;'>系統連線失敗，請稍後再試。</p>";
-            console.error(error);
-        }
-    }
-</script>
+                       <div class="order-card">
+    <div style="font-weight:bold; color:#007bff; margin-bottom:12px; font-size:18px;">📋 訂單 #${index + 1}</div>
+    
+    <div style="background: #eef7ff; padding: 10px; border-radius: 8px; margin-bottom: 15px;">
+        <div class="info-row" style="border:none;">
+            <span class="label">💰 對帳狀態</span>
+            <span class="value" style="color:#27ae60;">● ${order.payment}</span>
+        </div>
+        <div class="info-row" style="border:none; margin-top:5px;">
+            <span class="label">🚀 出貨狀態</span>
+            <span class="value" style="background:#007bff; color:white; padding:2px 8px; border-radius:4px; font-size:13px;">
+                ${order.shipStatus}
+            </span>
+        </div>
+    </div>
 
-</body>
-</html>
+    <div class="info-row">
+        <span class="label">🚛 出貨方式</span>
+        <span class="value" style="color:#555;">${order.shipMethod}</span>
+    </div>
+    <div class="info-row">
+        <span class="label">📅 官方出貨日</span>
+        <span class="value">${order.shipDate || "未定"}</span>
+    </div>
+
+    <hr style="border:0; border-top:1px solid #eee; margin:15px 0;">
+
+    <div class="info-row"><span class="label">👤 客戶姓名</span><span class="value">${order.name}</span></div>
+    <div class="info-row"><span class="label">💵 匯款金額</span><span class="value">$${order.amount}</span></div>
+    <div class="info-row"><span class="label">🛒 代購名稱</span><span class="value">${order.brand}</span></div>
+    <div class="info-row"><span class="label">📝 訂購項目</span><span class="value">${order.items}</span></div>
+    
+    <div class="memo-box"><strong>賣家備註：</strong><br>${order.memo || "無"}</div>
+</div>
