@@ -39,7 +39,7 @@
         
         resultDiv.innerHTML = "<p style='text-align:center;'>查詢中...</p>";
 
-        // ⚠️ 請務必在此貼上你最新的 GAS 網址
+        // 這是你目前的 API 網址
         const apiUrl = "https://script.google.com/macros/s/AKfycbxLJhpNNlcbhcOBbGzgJS7Js0KEPdyAEdpODHoVAYe8vchWMdl3yp8QzU66CVzEFxo7ag/exec"; 
 
         try {
@@ -69,3 +69,19 @@
                             <div class="info-row"><span class="label">📝 訂購項目</span><span class="value">${order.items}</span></div>
                             
                             <div class="memo-box"><strong>賣家備註：</strong><br>${order.memo || "無"}</div>
+                        </div>
+                    `;
+                    resultDiv.innerHTML += orderHtml;
+                });
+            } else {
+                resultDiv.innerHTML = "<p style='text-align:center; color:red;'>查無資料，請確認號碼是否正確。</p>";
+            }
+        } catch (error) {
+            resultDiv.innerHTML = "<p style='text-align:center; color:red;'>系統連線失敗，請檢查 API 網址或部署權限。</p>";
+            console.error(error);
+        }
+    }
+</script>
+
+</body>
+</html>
