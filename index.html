@@ -12,13 +12,14 @@
         button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.3s; }
         button:hover { background-color: #0056b3; }
         #result { margin-top: 25px; }
-        .order-card { border: 1px solid #eee; padding: 15px; border-radius: 12px; margin-bottom: 20px; background: #fafafa; position: relative; }
+        .order-card { border: 1px solid #eee; padding: 15px; border-radius: 12px; margin-bottom: 20px; background: #fafafa; }
         .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px dashed #eee; padding-bottom: 4px; }
         .label { color: #777; }
         .value { color: #333; font-weight: 500; text-align: right; }
         .memo-box { background: #fff3cd; padding: 10px; border-radius: 6px; font-size: 13px; margin-top: 10px; border-left: 4px solid #ffc107; }
         .status-badge { background:#007bff; color:white; padding:2px 8px; border-radius:4px; font-size:12px; }
         .progress-box { background: #eef7ff; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #d0e7ff; }
+        .shipping-highlight { color: #e67e22; font-weight: bold; font-size: 15px; }
     </style>
 </head>
 <body>
@@ -39,7 +40,7 @@
         
         resultDiv.innerHTML = "<p style='text-align:center;'>查詢中...</p>";
 
-        // 這是你目前的 API 網址
+        // ⚠️ 請務必將下方網址換成你剛才部署後得到的最新網址
         const apiUrl = "https://script.google.com/macros/s/AKfycbxLJhpNNlcbhcOBbGzgJS7Js0KEPdyAEdpODHoVAYe8vchWMdl3yp8QzU66CVzEFxo7ag/exec"; 
 
         try {
@@ -59,6 +60,7 @@
                             </div>
 
                             <div class="info-row"><span class="label">🚛 出貨方式</span><span class="value">${order.shipMethod}</span></div>
+                            <div class="info-row"><span class="label">🧧 補過國際運費</span><span class="value shipping-highlight">$${order.addShipping || "0"}</span></div>
                             <div class="info-row"><span class="label">📅 官方出貨日</span><span class="value">${order.shipDate || "未定"}</span></div>
                             
                             <hr style="border:0; border-top:1px solid #eee; margin:12px 0;">
