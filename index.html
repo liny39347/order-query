@@ -36,10 +36,8 @@
         const phone = document.getElementById('phoneInput').value.trim();
         const resultDiv = document.getElementById('result');
         if (!phone) { alert("請輸入手機號碼"); return; }
-        
         resultDiv.innerHTML = "<p style='text-align:center;'>查詢中...</p>";
 
-        // ⚠️ 請確保下方網址為您最新部署的 exec 網址
         const apiUrl = "https://script.google.com/macros/s/AKfycbxLJhpNNlcbhcOBbGzgJS7Js0KEPdyAEdpODHoVAYe8vchWMdl3yp8QzU66CVzEFxo7ag/exec"; 
 
         try {
@@ -49,6 +47,16 @@
             if (data.status === "success") {
                 resultDiv.innerHTML = ""; 
                 data.orders.forEach((order, index) => {
+                    // 自動判斷顯示 ⭕❌ 或 金額
+                    let shipDisplay = "";
+                    if (order.addShipping === true || order.addShipping === "true" || order.addShipping === "TRUE") {
+                        shipDisplay = "⭕ 已補";
+                    } else if (order.addShipping === false || order.addShipping === "false" || order.addShipping === "FALSE" || order.addShipping === "") {
+                        shipDisplay = "❌ 未補";
+                    } else {
+                        shipDisplay = "$" + order.addShipping; // 如果是數字，顯示金額
+                    }
+
                     const orderHtml = `
                         <div class="order-card">
                             <div style="font-weight:bold; color:#007bff; margin-bottom:12px; font-size:16px;">📋 訂單 #${index + 1}</div>
@@ -59,7 +67,7 @@
                             </div>
 
                             <div class="info-row"><span class="label">🚛 出貨方式</span><span class="value">${order.shipMethod}</span></div>
-                            <div class="info-row"><span class="label">🧧 補國際運費</span><span class="value shipping-highlight">$${order.addShipping || "0"}</span></div>
+                            <div class="info-row"><span class="label">🧧 補國際運費</span><span class="value shipping-highlight">${shipDisplay}</span></div>
                             <div class="info-row"><span class="label">📅 官方出貨日</span><span class="value">${order.shipDate || "未定"}</span></div>
                             
                             <hr style="border:0; border-top:1px solid #eee; margin:12px 0;">
@@ -75,7 +83,7 @@
                     resultDiv.innerHTML += orderHtml;
                 });
             } else {
-                resultDiv.innerHTML = "<p style='text-align:center; color:red;'>查無資料，請確認號碼是否正確。</p>";
+                resultDiv.innerHTML = "<p style='text-align:center; color:red;'>查與資料，請確認號碼是否正確。</p>";
             }
         } catch (error) {
             resultDiv.innerHTML = "<p style='text-align:center; color:red;'>系統連線失敗</p>";
