@@ -77,7 +77,7 @@
         resultDiv.innerHTML = "<p class='text-center'>正在連線 SYNK 傳送門...</p>";
 
         // 使用運作完美的最新網址
-        const apiUrl = "https://script.google.com/macros/s/AKfycbxR8H2kXLp91CLhkpsnvU0DvjnIHpNrsCW8cmyMOHhmBU7DPUuaahO1RCS-CJWRLULnoQ/exec"; 
+        const apiUrl = "https://script.google.com/macros/s/AKfycbxRLhpNNlcbhcOBbGzgJS7Js0KEPdyAEdpODHoVAYe8vchWMdl3yp8QzU66CVzEFxo7ag/exec"; 
 
         try {
             const response = await fetch(`${apiUrl}?id=${phone}`, { method: "GET", redirect: "follow" });
@@ -87,9 +87,7 @@
                 resultDiv.innerHTML = ""; 
                 data.orders.forEach((order, index) => {
                     
-                    // 💡 【對調翻譯邏輯】
-                    // ⭕ 或 🔴 代表不包含運費，需要二補
-                    // ❌ 代表已包含運費，不用再補
+                    // 💡 邏輯校正：⭕/🔴 代表未包含需二補，❌ 代表已包含
                     let shippingStatus = "已包含";
                     let rawShipping = String(order.addShipping || "").toUpperCase().trim();
                     
