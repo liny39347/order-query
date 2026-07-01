@@ -37,7 +37,7 @@
         button:hover { background-color: #1d4ed8; }
         #result { margin-top: 25px; }
         
-        /* 內卡：奶油大圓角小卡感 */
+        /* 內卡：大圓角追星小卡感 */
         .order-card { 
             background: #ffffff; padding: 24px 20px; border-radius: 28px; margin-bottom: 20px; color: #1e293b; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
@@ -52,7 +52,7 @@
         .block-value { color: #0f172a; font-weight: 600; text-align: left; white-space: pre-wrap; word-break: break-all; margin-top: 6px; line-height: 1.6; }
         .memo-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 14px; font-size: 14px; color: #475569; margin-top: 6px; white-space: pre-wrap; line-height: 1.5; }
         
-        /* 雙大膠囊狀態框 */
+        /* 狀態方塊 */
         .status-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
         .status-box { border-radius: 16px; padding: 14px 12px; text-align: center; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
         .status-pay { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
@@ -76,8 +76,8 @@
         if (!phone) { alert("請輸入手機號碼"); return; }
         resultDiv.innerHTML = "<p class='text-center'>正在連線 SYNK 傳送門...</p>";
 
-        // 💡 這裡已經直接內嵌好你提供的最新 GAS 網址囉！
-        const apiUrl = "https://script.google.com/macros/s/AKfycbxLJhpNNlcbhcOBbGzgJS7Js0KEPdyAEdpODHoVAYe8vchWMdl3yp8QzU66CVzEFxo7ag/exec"; 
+        // 🔗 這裡已經內嵌好你剛剛產生的全新所有人開放網址了！
+        const apiUrl = "https://script.google.com/macros/s/AKfycbxR8H2kXLp91CLhkpsnvU0DvjnIHpNrsCW8cmyMOHhmBU7DPUuaahO1RCS-CJWRLULnoQ/exec"; 
 
         try {
             const response = await fetch(`${apiUrl}?id=${phone}`);
