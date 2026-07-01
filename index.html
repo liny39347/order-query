@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>訂單狀態查詢系统</title>
     <style>
+        /* aespa 暗黑未來科技風 */
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background-color: #060913; 
@@ -35,6 +36,8 @@
         }
         button:hover { background-color: #1d4ed8; }
         #result { margin-top: 25px; }
+        
+        /* 內卡：奶油大圓角小卡感 */
         .order-card { 
             background: #ffffff; padding: 24px 20px; border-radius: 28px; margin-bottom: 20px; color: #1e293b; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
@@ -48,6 +51,8 @@
         .block-row { display: flex; flex-direction: column; margin-bottom: 14px; }
         .block-value { color: #0f172a; font-weight: 600; text-align: left; white-space: pre-wrap; word-break: break-all; margin-top: 6px; line-height: 1.6; }
         .memo-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 14px; font-size: 14px; color: #475569; margin-top: 6px; white-space: pre-wrap; line-height: 1.5; }
+        
+        /* 雙大膠囊狀態框 */
         .status-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
         .status-box { border-radius: 16px; padding: 14px 12px; text-align: center; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
         .status-pay { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
@@ -71,7 +76,7 @@
         if (!phone) { alert("請輸入手機號碼"); return; }
         resultDiv.innerHTML = "<p class='text-center'>正在連線 SYNK 傳送門...</p>";
 
-        // 固定使用你原本的 GAS 網址，不去改動 Google 後台
+        // 💡 這裡已經直接內嵌好你提供的最新 GAS 網址囉！
         const apiUrl = "https://script.google.com/macros/s/AKfycbxLJhpNNlcbhcOBbGzgJS7Js0KEPdyAEdpODHoVAYe8vchWMdl3yp8QzU66CVzEFxo7ag/exec"; 
 
         try {
@@ -81,41 +86,32 @@
                 resultDiv.innerHTML = ""; 
                 data.orders.forEach((order, index) => {
                     
-                    // 💡 【超強力修正】因為你不動 GAS 後台，網頁在這裡直接重新修正對應欄位
-                    // 原本大腦把 [對帳狀態] 錯當成商品狀態、把 [補國際運費] 當成對帳狀態，我們在此手動撥亂反正：
-                    let realBrand = order.itemStatus || "ITZY日場周邊"; // 實際對應到 H 欄
-                    let realItems = order.brand || "";               // 實際對應到 I 欄
-                    let realShippingRaw = String(order.payment || "").toUpperCase().trim(); // 實際對應到 G 欄
-                    let realPayment = order.amount || "已對帳";        // 實際對應到 D 欄
-                    let realItemStatus = order.items || "已下單";       // 實際對應到 E 欄
-                    let realAmount = order.shipMethod || "0";         // 實際對應到 C 欄
-                    let realShipMethod = order.addShipping || "賣貨便";  // 實際對應到 F 欄
-                    
                     // 翻譯運費圖案判定 (G欄的 ⭕ 或 ❌)
                     let shippingStatus = "已包含";
-                    if (realShippingRaw.includes("X") || realShippingRaw.includes("❌")) {
+                    let rawShipping = String(order.addShipping || "").toUpperCase().trim();
+                    if (rawShipping.includes("X") || rawShipping.includes("❌")) {
                         shippingStatus = "未包含（需二補）";
-                    } else if (realShippingRaw.includes("O") || realShippingRaw.includes("⭕") || realShippingRaw.includes("🔴")) {
+                    } else if (rawShipping.includes("O") || rawShipping.includes("⭕") || rawShipping.includes("🔴")) {
                         shippingStatus = "已包含";
-                    } else if (order.payment) {
-                        shippingStatus = order.payment;
+                    } else if (order.addShipping) {
+                        shippingStatus = order.addShipping;
                     }
                     
                     resultDiv.innerHTML += `
                         <div class="order-card">
                             <div class="card-header">
-                                <div class="tag-blue">${realBrand}</div>
+                                <div class="tag-blue">${order.brand || "代購周邊"}</div>
                                 <div class="user-hi">HI！${order.name}</div>
                             </div>
-                            <div class="info-row"><span class="label">出貨方式</span><span class="value">${realShipMethod}</span></div>
+                            <div class="info-row"><span class="label">出貨方式</span><span class="value">${order.shipMethod}</span></div>
                             <div class="info-row"><span class="label">國際運費</span><span class="value" style="color:#2563eb;">${shippingStatus}</span></div>
                             <div class="block-row" style="margin-top: 15px;">
                                 <span class="label">商品內容</span>
-                                <div class="block-value">${realItems}</div>
+                                <div class="block-value">${order.items}</div>
                             </div>
                             <div class="info-row" style="align-items: flex-end; margin-top: 18px; border-top: 1px dashed #f1f5f9; padding-top: 12px;">
                                 <span class="label">訂購金額</span>
-                                <span class="value price-text">$ ${realAmount}</span>
+                                <span class="value price-text">$ ${order.amount}</span>
                             </div>
                             <div class="block-row">
                                 <span class="label">備註欄</span>
@@ -124,11 +120,11 @@
                             <div class="status-container">
                                 <div class="status-box status-pay">
                                     <span class="status-title">對帳狀態</span>
-                                    <span class="status-val">${realPayment}</span>
+                                    <span class="status-val">${order.payment}</span>
                                 </div>
                                 <div class="status-box status-ship">
                                     <span class="status-title">商品狀態</span>
-                                    <span class="status-val">${realItemStatus}</span>
+                                    <span class="status-val">${order.itemStatus}</span>
                                 </div>
                             </div>
                         </div>`;
