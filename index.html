@@ -3,40 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>訂單進度查詢</title>
+    <title>訂單狀態查詢系统</title>
     <style>
-        body { font-family: -apple-system, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; padding: 20px; }
-        .container { background: white; padding: 30px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 100%; max-width: 400px; }
-        h2 { text-align: center; color: #333; margin-bottom: 25px; }
-        input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-        button { width: 100%; padding: 12px; background-color: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer; transition: 0.3s; }
-        button:hover { background-color: #0056b3; }
-        #result { margin-top: 25px; }
-        .order-card { border: 1px solid #eee; padding: 15px; border-radius: 12px; margin-bottom: 20px; background: #fafafa; }
-        .info-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; border-bottom: 1px dashed #eee; padding-bottom: 4px; }
-        .label { color: #777; min-width: 80px; }
-        
-        /* 支援 Alt+Enter 換行與自動分行 */
-        .value { 
-            color: #333; 
-            font-weight: 500; 
-            text-align: right; 
-            white-space: pre-wrap; 
-            word-break: break-all; 
-            max-width: 220px; 
+        /* 復刻：aespa 核心科技感，極深藍黑色的太空背景 */
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background-color: #060913; 
+            display: flex; 
+            justify-content: center; 
+            padding: 20px;
+            margin: 0;
+            color: #ffffff;
         }
         
-        .progress-box { background: #eef7ff; padding: 12px; border-radius: 8px; margin-bottom: 15px; border: 1px solid #d0e7ff; }
-        .shipping-highlight { color: #e67e22; font-weight: bold; font-size: 15px; }
-        .memo-box { background: #fff3cd; padding: 10px; border-radius: 6px; font-size: 13px; margin-top: 10px; border-left: 4px solid #ffc107; white-space: pre-wrap; }
+        /* 查詢外框 */
+        .container { 
+            background: #0b0e1a; 
+            padding: 30px 20px; 
+            border-radius: 24px; 
+            border: 1px solid #161b33;
+            width: 100%; 
+            max-width: 420px; 
+            box-sizing: border-box;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        }
+        
+        h2 { 
+            text-align: center; 
+            color: #ffffff; 
+            margin-bottom: 25px; 
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        
+        /* 輸入框：科技淡藍灰色背景，大圓角 */
+        input { 
+            width: 100%; 
+            padding: 16px; 
+            margin-bottom: 16px; 
+            border: none; 
+            border-radius: 16px; 
+            box-sizing: border-box; 
+            font-size: 16px; 
+            background-color: #dbe2ef;
+            color: #112240;
+            font-weight: 600;
+            text-align: center;
+        }
+        input:focus { outline: none; }
+        
+        /* 按鈕：經典螢光寶藍色 */
+        button { 
+            width: 100%; 
+            padding: 16px; 
+            background-color: #2563eb; 
+            color: white; 
+            border: none; 
+            border-radius: 16px; 
+            font-size: 16px; 
+            font-weight: 600;
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+        }
+        button:hover { 
+            background-color: #1d4ed8; 
+            transform: translateY(-1px);
+        }
+        
+        #result { margin-top: 25px; }
+        
+        /* 訂單卡片：走回高質感乾淨白底、超大奶油圓角，突顯內文追星小卡的精緻感 */
+        .order-card { 
+            background: #ffffff; 
+            padding: 24px 20px; 
+            border-radius: 28px; 
+            margin-bottom: 20px; 
+            color: #1e293b;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* 姓名置頂大改造：與代購來源橫向並排 */
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 14px;
+        }
+        /* 科技感亮藍色小標籤 */
+        .tag-blue {
+            background: #2563eb;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+        .user-hi {
+            font-size: 18px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+        
+        /* 基本欄位排版 */
+        .info-row { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 14px; 
+            font-size: 15px; 
+        }
+        .label { color: #64748b; font-weight: 500; min-width: 80px; }
+        .value { color: #0f172a; font-weight: 700; text-align: right; white-space: pre-wrap; word-break: break-all; }
+        
+        /* 金額放大 */
+        .price-text { font-size: 22px; font-weight: 800; color: #2563eb; }
+        
+        /* 商品內容：完全靠左排版，完美呈現你的 1. 2. 4. 商品 */
+        .block-row {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 14px;
+        }
+        .block-value { color: #0f172a; font-weight: 600; text-align: left; white-space: pre-wrap; word-break: break-all; margin-top: 6px; line-height: 1.6; }
+        
+        /* 賣家公告欄外框 */
+        .memo-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 14px;
+            color: #475569;
+            margin-top: 6px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+        
+        /* 底部雙狀態大方塊區塊（完美復刻範本） */
+        .status-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .status-box {
+            border-radius: 16px;
+            padding: 14px 12px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+        }
+        /* 對帳狀態：極光柔霧綠 */
+        .status-pay { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+        /* 下單狀態／即時貨況：霓虹迷幻紫 */
+        .status-ship { background: #f5f3ff; border: 1px solid #ddd6fe; color: #5b21b6; }
+        
+        .status-title { font-size: 13px; font-weight: 600; opacity: 0.8; }
+        .status-val { font-size: 16px; font-weight: 700; }
+        
+        .text-center { text-align: center; color: #64748b; font-size: 14px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>訂單狀態查詢</h2>
+    <h2>請輸入您填單時的手機號碼</h2>
     <input type="text" id="phoneInput" placeholder="請輸入手機號碼">
-    <button onclick="checkOrder()">查詢</button>
+    <button onclick="checkOrder()">查詢訂單</button>
     <div id="result"></div>
 </div>
 
@@ -45,9 +183,9 @@
         const phone = document.getElementById('phoneInput').value.trim();
         const resultDiv = document.getElementById('result');
         if (!phone) { alert("請輸入手機號碼"); return; }
-        resultDiv.innerHTML = "<p style='text-align:center;'>查詢中...</p>";
+        resultDiv.innerHTML = "<p class='text-center'>正在連線 SYNK 傳送門...</p>";
 
-        // ⚠️ 請務必換成您最新部署的 GAS 網址
+        // 🚀 幫你自動綁定好了！直接用你正式運作中的 GAS 網址
         const apiUrl = "https://script.google.com/macros/s/AKfycbxLJhpNNlcbhcOBbGzgJS7Js0KEPdyAEdpODHoVAYe8vchWMdl3yp8QzU66CVzEFxo7ag/exec"; 
 
         try {
@@ -57,50 +195,50 @@
             if (data.status === "success") {
                 resultDiv.innerHTML = ""; 
                 data.orders.forEach((order, index) => {
-                    // 自動判斷 ⭕❌ 或 金額
-                    let shipDisplay = "";
-                    if (order.addShipping === true || order.addShipping === "true" || order.addShipping === "TRUE") {
-                        shipDisplay = "⭕ 已補";
-                    } else if (order.addShipping === false || order.addShipping === "false" || order.addShipping === "FALSE" || order.addShipping === "") {
-                        shipDisplay = "❌ 未補";
-                    } else {
-                        shipDisplay = "$" + order.addShipping;
-                    }
-
-                    const orderHtml = `
+                    
+                    resultDiv.innerHTML += `
                         <div class="order-card">
-                            <div style="font-weight:bold; color:#007bff; margin-bottom:12px; font-size:16px;">📋 訂單 #${index + 1}</div>
+                            <div class="card-header">
+                                <div class="tag-blue">${order.brand || "代購"}</div>
+                                <div class="user-hi">HI！${order.name}</div>
+                            </div>
                             
-                            <div class="progress-box">
-                                <div class="info-row" style="border:none;"><span class="label">💰 對帳狀態</span><span class="value" style="color:#27ae60;">● ${order.payment}</span></div>
-                                <div class="info-row" style="border:none; margin-top:5px;"><span class="label">📦 商品狀態</span><span class="value" style="color:#007bff;">${order.itemStatus}</span></div>
+                            <div class="info-row"><span class="label">出貨方式</span><span class="value">${order.shipMethod}</span></div>
+                            <div class="info-row"><span class="label">國際運費</span><span class="value" style="color:#2563eb;">已包含</span></div>
+                            
+                            <div class="block-row" style="margin-top: 15px;">
+                                <span class="label">商品內容</span>
+                                <div class="block-value">${order.items}</div>
                             </div>
 
-                            <div class="info-row"><span class="label">🚛 出貨方式</span><span class="value">${order.shipMethod}</span></div>
-                            <div class="info-row"><span class="label">🧧 補國際運費</span><span class="value shipping-highlight">${shipDisplay}</span></div>
-                            <div class="info-row"><span class="label">📅 官方出貨日</span><span class="value">${order.shipDate || "未定"}</span></div>
-                            
-                            <hr style="border:0; border-top:1px solid #eee; margin:12px 0;">
-                            
-                            <div class="info-row"><span class="label">👤 客戶姓名</span><span class="value">${order.name}</span></div>
-                            <div class="info-row"><span class="label">💵 匯款金額</span><span class="value">$${order.amount}</span></div>
-                            <div class="info-row"><span class="label">🛒 代購品名</span><span class="value">${order.brand}</span></div>
-                            
-                            <div class="info-row" style="flex-direction: column; align-items: flex-start;">
-                                <span class="label" style="margin-bottom:5px;">📝 訂購項目</span>
-                                <span class="value" style="text-align: left; width: 100%;">${order.items}</span>
+                            <div class="info-row" style="align-items: flex-end; margin-top: 18px; border-top: 1px dashed #f1f5f9; padding-top: 12px;">
+                                <span class="label">訂購金額</span>
+                                <span class="value price-text">$ ${order.amount}</span>
                             </div>
                             
-                            <div class="memo-box"><strong>賣家備註：</strong><br>${order.memo || "無"}</div>
+                            <div class="block-row">
+                                <span class="label">備註欄</span>
+                                <div class="memo-box"><strong>賣家公告：</strong><br>商品抵達台灣後會依序安排寄出，謝謝您的配合！</div>
+                            </div>
+                            
+                            <div class="status-container">
+                                <div class="status-box status-pay">
+                                    <span class="status-title">對帳狀態</span>
+                                    <span class="status-val">● ${order.payment}</span>
+                                </div>
+                                <div class="status-box status-ship">
+                                    <span class="status-title">即時貨況</span>
+                                    <span class="status-val">${order.itemStatus || "處理中"}</span>
+                                </div>
+                            </div>
                         </div>
                     `;
-                    resultDiv.innerHTML += orderHtml;
                 });
             } else {
-                resultDiv.innerHTML = "<p style='text-align:center; color:red;'>查無資料，請確認號碼是否正確。</p>";
+                resultDiv.innerHTML = "<p class='text-center' style='color:#ef4444;'>查無訂單，請確認號碼是否正確。</p>";
             }
         } catch (error) {
-            resultDiv.innerHTML = "<p style='text-align:center; color:red;'>系統連線失敗，請檢查 API 網址或部署權限。</p>";
+            resultDiv.innerHTML = "<p class='text-center' style='color:#ef4444;'>系統連線失敗，請稍後再試。</p>";
         }
     }
 </script>
