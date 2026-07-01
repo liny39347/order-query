@@ -76,8 +76,8 @@
         if (!phone) { alert("請輸入手機號碼"); return; }
         resultDiv.innerHTML = "<p class='text-center'>正在連線 SYNK 傳送門...</p>";
 
-        // 使用運作完美的最新網址
-        const apiUrl = "https://script.google.com/macros/s/AKfycbxRLhpNNlcbhcOBbGzgJS7Js0KEPdyAEdpODHoVAYe8vchWMdl3yp8QzU66CVzEFxo7ag/exec"; 
+        // 🔗 這裡已經內嵌好你剛發給我的最新正確網址囉！
+        const apiUrl = "https://script.google.com/macros/s/AKfycbxR8H2kXLp91CLhkpsnvU0DvjnIHpNrsCW8cmyMOHhmBU7DPUuaahO1RCS-CJWRLULnoQ/exec"; 
 
         try {
             const response = await fetch(`${apiUrl}?id=${phone}`, { method: "GET", redirect: "follow" });
@@ -87,7 +87,7 @@
                 resultDiv.innerHTML = ""; 
                 data.orders.forEach((order, index) => {
                     
-                    // 💡 邏輯校正：⭕/🔴 代表未包含需二補，❌ 代表已包含
+                    // 💡 邏輯校正：⭕ 或 🔴 代表未包含、需二補；❌ 代表已包含運費
                     let shippingStatus = "已包含";
                     let rawShipping = String(order.addShipping || "").toUpperCase().trim();
                     
