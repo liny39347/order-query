@@ -74,7 +74,7 @@
         
         #result { margin-top: 25px; }
         
-        /* 訂單卡片：走回高質感乾淨白底、超大奶油圓角，突顯內文追星小卡的精緻感 */
+        /* 訂單卡片：高質感乾淨白底、超大奶油圓角，突顯內文追星小卡的精緻感 */
         .order-card { 
             background: #ffffff; 
             padding: 24px 20px; 
@@ -84,7 +84,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
-        /* 姓名置頂大改造：與代購來源橫向並排 */
+        /* 姓名置頂：與代購來源橫向並排 */
         .card-header {
             display: flex;
             align-items: center;
@@ -121,7 +121,7 @@
         /* 金額放大 */
         .price-text { font-size: 22px; font-weight: 800; color: #2563eb; }
         
-        /* 商品內容：完全靠左排版，完美呈現你的 1. 2. 4. 商品 */
+        /* 商品內容：完全靠左排版 */
         .block-row {
             display: flex;
             flex-direction: column;
@@ -142,7 +142,7 @@
             line-height: 1.5;
         }
         
-        /* 底部雙狀態大方塊區塊（完美復刻範本） */
+        /* 底部雙狀態大方塊區塊 */
         .status-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -185,7 +185,7 @@
         if (!phone) { alert("請輸入手機號碼"); return; }
         resultDiv.innerHTML = "<p class='text-center'>正在連線 SYNK 傳送門...</p>";
 
-        // 🚀 幫你自動綁定好了！直接用你正式運作中的 GAS 網址
+        // 正式運作中的 GAS 大腦網址
         const apiUrl = "https://script.google.com/macros/s/AKfycbxLJhpNNlcbhcOBbGzgJS7Js0KEPdyAEdpODHoVAYe8vchWMdl3yp8QzU66CVzEFxo7ag/exec"; 
 
         try {
@@ -196,16 +196,33 @@
                 resultDiv.innerHTML = ""; 
                 data.orders.forEach((order, index) => {
                     
+                    // 💡 運費 O/X 翻譯邏輯
+                    let shippingStatus = "已包含";
+                    let rawShipping = String(order.addShipping || "").toUpperCase().trim();
+                    
+                    if (rawShipping.includes("X") || rawShipping.includes("❌")) {
+                        shippingStatus = "未包含（需二補）";
+                    } else if (rawShipping.includes("O") || rawShipping.includes("⭕")) {
+                        shippingStatus = "已包含";
+                    } else if (order.addShipping) {
+                        // 如果你不是填 O/X 而是直接填了數字或其它字，就直接顯示該內容
+                        shippingStatus = order.addShipping;
+                    }
+                    
                     resultDiv.innerHTML += `
                         <div class="order-card">
+                            <!-- 置頂區塊：來源標籤與客戶姓名 -->
                             <div class="card-header">
                                 <div class="tag-blue">${order.brand || "代購"}</div>
                                 <div class="user-hi">HI！${order.name}</div>
                             </div>
                             
                             <div class="info-row"><span class="label">出貨方式</span><span class="value">${order.shipMethod}</span></div>
-                            <div class="info-row"><span class="label">國際運費</span><span class="value" style="color:#2563eb;">已包含</span></div>
                             
+                            <!-- 💡 國際運費欄位：已經過運費翻譯機轉換 -->
+                            <div class="info-row"><span class="label">國際運費</span><span class="value" style="color:#2563eb;">${shippingStatus}</span></div>
+                            
+                            <!-- 商品內容 -->
                             <div class="block-row" style="margin-top: 15px;">
                                 <span class="label">商品內容</span>
                                 <div class="block-value">${order.items}</div>
@@ -221,6 +238,7 @@
                                 <div class="memo-box"><strong>賣家公告：</strong><br>商品抵達台灣後會依序安排寄出，謝謝您的配合！</div>
                             </div>
                             
+                            <!-- 雙底色大狀態方塊 -->
                             <div class="status-container">
                                 <div class="status-box status-pay">
                                     <span class="status-title">對帳狀態</span>
