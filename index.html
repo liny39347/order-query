@@ -76,28 +76,35 @@
         if (!phone) { alert("請輸入手機號碼"); return; }
         resultDiv.innerHTML = "<p class='text-center'>正在連線 SYNK 傳送門...</p>";
 
-        // 🔗 這裡已經內嵌好你剛發給我的最新正確網址囉！
+        // 🔗 這裡已經內嵌好你指定的最新運作網址
         const apiUrl = "https://script.google.com/macros/s/AKfycbxR8H2kXLp91CLhkpsnvU0DvjnIHpNrsCW8cmyMOHhmBU7DPUuaahO1RCS-CJWRLULnoQ/exec"; 
 
         try {
             const response = await fetch(`${apiUrl}?id=${phone}`, { method: "GET", redirect: "follow" });
             const data = await response.json();
             
-            if (data.status === "success") {
+            if (data.status === "success" || (data.orders && data.orders.length > 0)) {
                 resultDiv.innerHTML = ""; 
-                data.orders.forEach((order, index) => {
+                
+                // 相容舊版 GAS 的物件格式
+                const ordersList = data.orders ? data.orders : [];
+                
+                ordersList.forEach((order, index) => {
                     
-                    // 💡 邏輯校正：⭕ 或 🔴 代表未包含、需二補；❌ 代表已包含運費
+                    // 💡 撥亂返正翻譯機邏輯
                     let shippingStatus = "已包含";
                     let rawShipping = String(order.addShipping || "").toUpperCase().trim();
                     
                     if (rawShipping.includes("O") || rawShipping.includes("⭕") || rawShipping.includes("🔴")) {
-                        shippingStatus = "未包含（需二補）";
+                        shippingStatus = "未包含（需二補）"; // ⭕ 顯示這個
                     } else if (rawShipping.includes("X") || rawShipping.includes("❌")) {
-                        shippingStatus = "已包含";
+                        shippingStatus = "已包含";          // ❌ 顯示這個
                     } else if (order.addShipping) {
                         shippingStatus = order.addShipping;
                     }
+                    
+                    // 備註欄處理：若 GAS 有回傳就用 GAS，沒有就用預設
+                    let finalMemo = order.memo ? order.memo : "商品抵達台灣後會依序安排寄出，謝謝您的配合！";
                     
                     resultDiv.innerHTML += `
                         <div class="order-card">
@@ -117,7 +124,7 @@
                             </div>
                             <div class="block-row">
                                 <span class="label">備註欄</span>
-                                <div class="memo-box"><strong>賣家公告：</strong><br>商品抵達台灣後會依序安排寄出，謝謝您的配合！</div>
+                                <div class="memo-box"><strong>賣家公告：</strong><br>${finalMemo}</div>
                             </div>
                             <div class="status-container">
                                 <div class="status-box status-pay">
