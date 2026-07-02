@@ -5,61 +5,105 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>訂單狀態查詢系统</title>
     <style>
-        /* aespa 暗黑未來科技風 */
+        /* 溫柔莫蘭迪色系 */
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background-color: #060913; 
+            background-color: #e8e7e3; /* 莫蘭迪淺灰燕麥底色 */
             display: flex; 
             justify-content: center; 
             padding: 20px;
             margin: 0;
-            color: #ffffff;
+            color: #4a4a4a;
         }
         .container { 
-            background: #0b0e1a; 
+            background: #f4f3ef; /* 霧面米白 */
             padding: 30px 20px; 
             border-radius: 24px; 
-            border: 1px solid #161b33;
+            border: 1px solid #dcdad4;
             width: 100%; 
             max-width: 420px; 
             box-sizing: border-box;
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         }
-        h2 { text-align: center; color: #ffffff; margin-bottom: 25px; font-size: 20px; font-weight: 600; letter-spacing: 1px; }
+        h2 { text-align: center; color: #6b6863; margin-bottom: 25px; font-size: 18px; font-weight: 600; letter-spacing: 1px; }
         input { 
-            width: 100%; padding: 16px; margin-bottom: 16px; border: none; border-radius: 16px; 
-            box-sizing: border-box; font-size: 16px; background-color: #dbe2ef; color: #112240; font-weight: 600; text-align: center;
+            width: 100%; padding: 16px; margin-bottom: 16px; border: 1px solid #dcdad4; border-radius: 16px; 
+            box-sizing: border-box; font-size: 16px; background-color: #ffffff; color: #4a4a4a; font-weight: 600; text-align: center;
+            outline: none; transition: border 0.2s;
         }
+        input:focus { border: 1px solid #a39e93; }
         button { 
-            width: 100%; padding: 16px; background-color: #2563eb; color: white; border: none; border-radius: 16px; 
-            font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            width: 100%; padding: 16px; background-color: #9e8e81; color: white; border: none; border-radius: 16px; 
+            font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 12px rgba(158, 142, 129, 0.2);
         }
-        button:hover { background-color: #1d4ed8; }
+        button:hover { background-color: #8c7c70; }
         #result { margin-top: 25px; }
         
-        /* 內卡：大圓角追星小卡感 */
+        /* 內卡：莫蘭迪霧面微透質感小卡 */
         .order-card { 
-            background: #ffffff; padding: 24px 20px; border-radius: 28px; margin-bottom: 20px; color: #1e293b; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.75); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 24px 20px; 
+            border-radius: 24px; 
+            margin-bottom: 20px; 
+            color: #575451; 
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.6);
         }
-        .card-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; border-bottom: 1px dashed #e2e8f0; padding-bottom: 14px; }
-        .tag-blue { background: #2563eb; color: white; padding: 6px 14px; border-radius: 12px; font-size: 13px; font-weight: 700; }
-        .user-hi { font-size: 18px; font-weight: 700; color: #0f172a; }
-        .info-row { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 15px; }
-        .label { color: #64748b; font-weight: 500; min-width: 80px; }
-        .value { color: #0f172a; font-weight: 700; text-align: right; white-space: pre-wrap; word-break: break-all; }
-        .price-text { font-size: 22px; font-weight: 800; color: #2563eb; }
-        .block-row { display: flex; flex-direction: column; margin-bottom: 14px; }
-        .block-value { color: #0f172a; font-weight: 600; text-align: left; white-space: pre-wrap; word-break: break-all; margin-top: 6px; line-height: 1.6; }
-        .memo-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 14px; font-size: 14px; color: #475569; margin-top: 6px; white-space: pre-wrap; line-height: 1.5; }
         
-        /* 狀態方塊 */
+        /* 頂部標頭排列優化 */
+        .card-header { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: flex-start; 
+            gap: 12px; 
+            margin-bottom: 20px; 
+            border-bottom: 1px dashed #e4e2dd; 
+            padding-bottom: 16px; 
+        }
+        
+        /* 放大顯眼版代購品名標籤 */
+        .tag-blue { 
+            background: #7a6b5e; 
+            color: white; 
+            padding: 8px 16px; 
+            border-radius: 12px; 
+            font-size: 15px; 
+            font-weight: 800; 
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 6px rgba(122, 107, 94, 0.15);
+        }
+        
+        .user-hi { font-size: 15px; font-weight: 700; color: #6b6863; line-height: 1.4; }
+        .info-row { display: flex; justify-content: space-between; margin-bottom: 14px; font-size: 14px; }
+        .label { color: #8c8882; font-weight: 500; min-width: 80px; }
+        .value { color: #575451; font-weight: 700; text-align: right; white-space: pre-wrap; word-break: break-all; }
+        .price-text { font-size: 20px; font-weight: 800; color: #917b68; } 
+        .block-row { display: flex; flex-direction: column; margin-bottom: 14px; }
+        .block-value { color: #575451; font-weight: 600; text-align: left; white-space: pre-wrap; word-break: break-all; margin-top: 6px; line-height: 1.6; font-size: 14px; }
+        
+        /* 備註欄 */
+        .memo-box { 
+            background: rgba(238, 236, 231, 0.5); 
+            border: 1px solid #e4e2dd; 
+            padding: 12px; 
+            border-radius: 12px; 
+            font-size: 13px; 
+            color: #736f6a; 
+            margin-top: 6px; 
+            white-space: pre-wrap; 
+            line-height: 1.5; 
+        }
+        
+        /* 狀態方塊 - 莫蘭迪霧調 */
         .status-container { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; }
-        .status-box { border-radius: 16px; padding: 14px 12px; text-align: center; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
-        .status-pay { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
-        .status-ship { background: #f5f3ff; border: 1px solid #ddd6fe; color: #5b21b6; }
-        .status-title { font-size: 13px; font-weight: 600; opacity: 0.8; }
-        .status-val { font-size: 16px; font-weight: 700; }
-        .text-center { text-align: center; color: #64748b; font-size: 14px; }
+        .status-box { border-radius: 14px; padding: 12px; text-align: center; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+        .status-pay { background: #e3ebe4; border: 1px solid #cedbd0; color: #526657; } 
+        .status-ship { background: #e6e3eb; border: 1px solid #d3cedb; color: #595266; } 
+        .status-title { font-size: 12px; font-weight: 600; opacity: 0.8; }
+        .status-val { font-size: 15px; font-weight: 700; }
+        .text-center { text-align: center; color: #8c8882; font-size: 14px; }
     </style>
 </head>
 <body>
@@ -74,9 +118,8 @@
         const phone = document.getElementById('phoneInput').value.trim();
         const resultDiv = document.getElementById('result');
         if (!phone) { alert("請輸入手機號碼"); return; }
-        resultDiv.innerHTML = "<p class='text-center'>正在連線 SYNK 傳送門...</p>";
+        resultDiv.innerHTML = "<p class='text-center'>正在連線查詢中...</p>";
 
-        // 🔗 這裡已經內嵌好你指定的最新運作網址
         const apiUrl = "https://script.google.com/macros/s/AKfycbxR8H2kXLp91CLhkpsnvU0DvjnIHpNrsCW8cmyMOHhmBU7DPUuaahO1RCS-CJWRLULnoQ/exec"; 
 
         try {
@@ -86,39 +129,36 @@
             if (data.status === "success" || (data.orders && data.orders.length > 0)) {
                 resultDiv.innerHTML = ""; 
                 
-                // 相容舊版 GAS 的物件格式
                 const ordersList = data.orders ? data.orders : [];
                 
                 ordersList.forEach((order, index) => {
                     
-                    // 💡 撥亂返正翻譯機邏輯
                     let shippingStatus = "已包含";
                     let rawShipping = String(order.addShipping || "").toUpperCase().trim();
                     
                     if (rawShipping.includes("O") || rawShipping.includes("⭕") || rawShipping.includes("🔴")) {
-                        shippingStatus = "未包含（需二補）"; // ⭕ 顯示這個
+                        shippingStatus = "未包含（需二補）";
                     } else if (rawShipping.includes("X") || rawShipping.includes("❌")) {
-                        shippingStatus = "已包含";          // ❌ 顯示這個
+                        shippingStatus = "已包含";
                     } else if (order.addShipping) {
                         shippingStatus = order.addShipping;
                     }
                     
-                    // 備註欄處理：若 GAS 有回傳就用 GAS，沒有就用預設
                     let finalMemo = order.memo ? order.memo : "商品抵達台灣後會依序安排寄出，謝謝您的配合！";
                     
                     resultDiv.innerHTML += `
                         <div class="order-card">
                             <div class="card-header">
-                                <div class="tag-blue">${order.brand || "代購周邊"}</div>
-                                <div class="user-hi">HI！${order.name}</div>
+                                <div class="tag-blue">${order.brand || "代購商品"}</div>
+                                <div class="user-hi">HI！${order.name}，來確認專屬進度吧😉 </div>
                             </div>
                             <div class="info-row"><span class="label">出貨方式</span><span class="value">${order.shipMethod}</span></div>
-                            <div class="info-row"><span class="label">國際運費</span><span class="value" style="color:#2563eb;">${shippingStatus}</span></div>
+                            <div class="info-row"><span class="label">國際運費</span><span class="value" style="color:#917b68;">${shippingStatus}</span></div>
                             <div class="block-row" style="margin-top: 15px;">
                                 <span class="label">商品內容</span>
                                 <div class="block-value">${order.items}</div>
                             </div>
-                            <div class="info-row" style="align-items: flex-end; margin-top: 18px; border-top: 1px dashed #f1f5f9; padding-top: 12px;">
+                            <div class="info-row" style="align-items: flex-end; margin-top: 18px; border-top: 1px dashed #e4e2dd; padding-top: 12px;">
                                 <span class="label">訂購金額</span>
                                 <span class="value price-text">$ ${order.amount}</span>
                             </div>
@@ -138,8 +178,8 @@
                             </div>
                         </div>`;
                 });
-            } else { resultDiv.innerHTML = "<p class='text-center' style='color:#ef4444;'>查無訂單，請確認號碼是否正確。</p>"; }
-        } catch (error) { resultDiv.innerHTML = "<p class='text-center' style='color:#ef4444;'>系統連線失敗，請稍後再試。</p>"; }
+            } else { resultDiv.innerHTML = "<p class='text-center' style='color:#c25f5f;'>查無訂單，請確認號碼是否正確。</p>"; }
+        } catch (error) { resultDiv.innerHTML = "<p class='text-center' style='color:#c25f5f;'>系統連線失敗，請稍後再試。</p>"; }
     }
 </script>
 </body>
